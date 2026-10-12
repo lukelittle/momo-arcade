@@ -81,6 +81,19 @@ Config.Arena = {
 }
 
 --------------------------------------------------------------------------------
+-- Client visuals
+--------------------------------------------------------------------------------
+Config.Visuals = {
+	DropMarkers = true, -- soft circle on the ground under each of your falling momos
+	OtherPlayersMomoTransparency = 0.6, -- fade other players' momos so yours stand out
+	ShakeIntensity = 0.45, -- studs of camera shake on a burnt catch
+	ShakeSeconds = 0.35,
+	LobbyCameraRadius = 78, -- slow orbit shown behind the menus
+	LobbyCameraHeight = 30,
+	LobbyCameraSpeed = 0.06, -- radians per second
+}
+
+--------------------------------------------------------------------------------
 -- Saving
 --------------------------------------------------------------------------------
 Config.Data = {
