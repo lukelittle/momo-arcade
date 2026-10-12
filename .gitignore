@@ -1,0 +1,24 @@
+# Roblox build output
+*.rbxl
+*.rbxlx
+*.rbxm
+*.rbxmx
+*.rbxl.lock
+*.rbxlx.lock
+*.lock
+
+# Rojo / tooling
+sourcemap.json
+build/
+
+# OS junk
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
