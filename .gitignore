@@ -22,3 +22,6 @@ desktop.ini
 !.vscode/extensions.json
 .idea/
 *.swp
+
+# Local tool caches (type defs, check builds)
+.cache/
