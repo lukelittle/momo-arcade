@@ -1,0 +1,31 @@
+{
+  "name": "momo-catch",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "Shared": {
+        "$path": "../../shared"
+      },
+      "MomoCatch": {
+        "$path": "src/shared"
+      }
+    },
+    "ServerScriptService": {
+      "MomoCatch": {
+        "$path": "src/server"
+      }
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "MomoCatch": {
+          "$path": "src/client"
+        }
+      }
+    },
+    "StarterGui": {
+      "MomoCatchGui": {
+        "$path": "src/ui"
+      }
+    }
+  }
+}
