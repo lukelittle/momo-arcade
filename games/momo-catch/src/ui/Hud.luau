@@ -119,7 +119,8 @@ function Hud.create(parent: Instance): Hud
 		TextColor = Color3.new(1, 1, 1),
 		Parent = root,
 	})
-	UIHelpers.stroke(countdown, Colors.UiPinkDark, 6)
+	-- UIStroke has its own Transparency (TextTransparency doesn't fade it), so keep a handle.
+	local countdownStroke = UIHelpers.stroke(countdown, Colors.UiPinkDark, 6)
 	countdown.Visible = false
 
 	local shownScore = 0
@@ -208,14 +209,11 @@ function Hud.create(parent: Instance): Hud
 			countdown.Text = text
 			countdown.Visible = true
 			countdown.TextTransparency = 0
+			countdownStroke.Transparency = 0
 			TweenHelpers.pop(countdown, 1.6)
-			TweenHelpers.play(
-				countdown,
-				TweenHelpers.info(0.9, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
-				{
-					TextTransparency = 1,
-				}
-			)
+			local fade = TweenHelpers.info(0.9, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+			TweenHelpers.play(countdown, fade, { TextTransparency = 1 })
+			TweenHelpers.play(countdownStroke, fade, { Transparency = 1 })
 		end,
 		flashDamage = function()
 			flash.BackgroundTransparency = 0.55
