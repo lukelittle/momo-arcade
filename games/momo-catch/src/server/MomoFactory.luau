@@ -17,6 +17,9 @@ local Config = require(ReplicatedStorage.MomoCatch.Config)
 local Types = require(ReplicatedStorage.MomoCatch.Types)
 
 local Colors = Config.Colors
+-- Every size and offset below is for a 1x momo; this scales the whole model so they
+-- read clearly on a phone screen.
+local SCALE = Config.Spawning.MomoScale
 
 export type Momo = {
 	model: Model,
@@ -33,7 +36,7 @@ local PLEAT_COUNT = 7
 local function ellipsoid(name: string, size: Vector3, color: Color3): Part
 	local part = Instance.new("Part")
 	part.Name = name
-	part.Size = size
+	part.Size = size * SCALE
 	part.Color = color
 	part.Material = Enum.Material.SmoothPlastic
 	part.TopSurface = Enum.SurfaceType.Smooth
@@ -72,7 +75,7 @@ function MomoFactory.create(kind: Types.MomoKind, cframe: CFrame, ownerUserId: n
 	model.PrimaryPart = body
 
 	local function attach(part: BasePart, offset: CFrame)
-		part.CFrame = cframe * offset
+		part.CFrame = cframe * (offset.Rotation + offset.Position * SCALE)
 		part.Massless = true
 		local weld = Instance.new("WeldConstraint")
 		weld.Part0 = body
@@ -99,14 +102,14 @@ function MomoFactory.create(kind: Types.MomoKind, cframe: CFrame, ownerUserId: n
 		sparkles.Parent = body
 		local light = Instance.new("PointLight")
 		light.Color = Colors.MomoGolden
-		light.Range = 8
+		light.Range = 8 * SCALE
 		light.Brightness = 1.5
 		light.Parent = body
 	elseif kind == "Burnt" then
 		local smoke = Instance.new("Smoke")
 		smoke.Color = Color3.fromRGB(70, 60, 60)
 		smoke.Opacity = 0.25
-		smoke.Size = 1.2
+		smoke.Size = 1.2 * SCALE
 		smoke.RiseVelocity = 3
 		smoke.Parent = body
 	end
@@ -121,7 +124,8 @@ function MomoFactory.create(kind: Types.MomoKind, cframe: CFrame, ownerUserId: n
 	fall.Attachment0 = attachment
 	fall.RelativeTo = Enum.ActuatorRelativeTo.World
 	fall.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
-	fall.MaxForce = math.huge
+	-- Big but finite: math.huge forces/torques can destabilise the solver on tiny parts.
+	fall.MaxForce = 1e6
 	fall.VectorVelocity = Vector3.zero
 	fall.Parent = body
 
@@ -129,7 +133,7 @@ function MomoFactory.create(kind: Types.MomoKind, cframe: CFrame, ownerUserId: n
 	spin.Name = "Spin"
 	spin.Attachment0 = attachment
 	spin.RelativeTo = Enum.ActuatorRelativeTo.World
-	spin.MaxTorque = math.huge
+	spin.MaxTorque = 1e6
 	spin.AngularVelocity = Vector3.zero
 	spin.Parent = body
 

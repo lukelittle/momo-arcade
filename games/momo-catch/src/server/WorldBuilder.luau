@@ -140,14 +140,25 @@ end
 local function buildGround(root: Instance)
 	local ground = folder("Ground", root)
 
-	-- Big meadow that fills the view, a little below the arena.
-	makePart(ground, {
-		Name = "Meadow",
-		Size = Vector3.new(2048, 4, 2048),
-		CFrame = CFrame.new(CENTER.X, GROUND_Y - 2.6, CENTER.Z),
-		Material = Enum.Material.Grass,
-		Color = Colors.Meadow,
-	})
+	-- Big meadow that fills the view, a little below the arena. Parts max out at 2048
+	-- studs, so it's a 3x3 grid reaching past the distant mountains.
+	for gx = -1, 1 do
+		for gz = -1, 1 do
+			local tile = makePart(ground, {
+				Name = "Meadow",
+				Size = Vector3.new(2048, 4, 2048),
+				CFrame = CFrame.new(CENTER.X + gx * 2048, GROUND_Y - 2.6, CENTER.Z + gz * 2048),
+				Material = Enum.Material.Grass,
+				Color = Colors.Meadow,
+			})
+			if gx ~= 0 or gz ~= 0 then
+				-- Nobody can reach the outer tiles; skip collision/raycasts for them.
+				tile.CanCollide = false
+				tile.CanQuery = false
+				tile.CanTouch = false
+			end
+		end
+	end
 
 	-- Raised wooden-edged rim, then the grassy arena on top.
 	cylinder(ground, CFrame.new(CENTER + Vector3.new(0, -1.1, 0)), 1.8, ARENA.Radius * 2 + 4, {
@@ -556,12 +567,19 @@ local function buildScenery(root: Instance)
 		end
 	end
 
-	-- A range mostly behind the tea house (-Z), wrapping around the sides.
-	for i = 0, 9 do
-		local angle = math.rad(-170 + i * 18 + random:NextNumber(-6, 6))
-		local distance = random:NextNumber(420, 620)
+	-- A range mostly behind the tea house (-Z), wrapping around the sides. Far away and
+	-- big, so the peaks sit low on the horizon and the sky stays open above the arena.
+	local range = Config.Mountains
+	local spread = 180 / math.max(1, range.Count - 1)
+	for i = 0, range.Count - 1 do
+		local angle = math.rad(-180 + i * spread + random:NextNumber(-5, 5))
+		local distance = random:NextNumber(range.DistanceMin, range.DistanceMax)
 		local position = CENTER + Vector3.new(math.cos(angle) * distance, -2, math.sin(angle) * distance)
-		mountain(position, random:NextNumber(220, 360), random:NextNumber(160, 280))
+		mountain(
+			position,
+			random:NextNumber(range.BaseWidthMin, range.BaseWidthMax),
+			random:NextNumber(range.HeightMin, range.HeightMax)
+		)
 	end
 end
 

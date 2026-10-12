@@ -16,6 +16,9 @@
       }
     },
     "StarterPlayer": {
+      "$properties": {
+        "DevTouchMovementMode": "Thumbstick"
+      },
       "StarterPlayerScripts": {
         "MomoCatch": {
           "$path": "src/client"

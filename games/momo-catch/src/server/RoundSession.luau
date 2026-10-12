@@ -156,7 +156,7 @@ function RoundSession.Start(self: RoundSession)
 	self.roundTrove:Clean() -- defensive: nothing from a previous round survives
 	self.score:Reset()
 	self.lives = Config.Round.StartingLives
-	self.spawnIn = 0.4
+	self.spawnIn = Config.Spawning.FirstDelay
 	self.countdown = Timer.new(Config.Round.CountdownSeconds)
 	self.countdown:Start()
 	self.timer = Timer.new(Config.Round.LengthSeconds)
@@ -278,8 +278,15 @@ function RoundSession._spawnMomo(self: RoundSession, difficulty: number)
 		return
 	end
 
-	-- Pick a random point near the player (uniform over a disc), kept inside the arena.
-	local around = BasketService.getPlayerPosition(self.player) or CENTER
+	-- Pick a random point (uniform over a disc) centred a little in front of the player,
+	-- where the camera is looking, kept inside the arena.
+	local root = BasketService.getPlayerCFrame(self.player)
+	local around = CENTER
+	if root then
+		local forward = Vector3.new(root.LookVector.X, 0, root.LookVector.Z)
+		forward = if forward.Magnitude > 1e-3 then forward.Unit else Vector3.zero
+		around = root.Position + forward * Config.Spawning.ForwardBias
+	end
 	local distance = Config.Spawning.RadiusAroundPlayer * math.sqrt(self.random:NextNumber())
 	local angle = self.random:NextNumber(0, math.pi * 2)
 	local offset = Vector3.new(

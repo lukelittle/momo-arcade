@@ -4,7 +4,7 @@
 	- Sounds (local only)
 	- Catch bursts, floating "+1" / "+5" text, burnt smoke puff
 	- Camera shake on a burnt catch
-	- Drop markers under your own falling momos; other players' momos fade out
+	- Drop markers and a soft outline on your own falling momos; other players' momos fade out
 ]]
 
 local ContentProvider = game:GetService("ContentProvider")
@@ -206,6 +206,23 @@ local function markerColor(kind: any): Color3
 	return Color3.new(1, 1, 1)
 end
 
+-- Soft outline so your momos stand out against a bright sky on a small screen.
+-- Only your own momos get one: a client renders at most 31 Highlights at a time,
+-- and Config.Spawning.MaxActivePerPlayer keeps us well under that.
+local function outline(model: Model)
+	local kind = model:GetAttribute("Kind")
+	local highlight = Instance.new("Highlight")
+	highlight.Name = "MomoOutline"
+	highlight.Adornee = model
+	highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+	highlight.OutlineColor = if kind == "Burnt" then Color3.fromRGB(60, 40, 30) else Color3.new(1, 1, 1)
+	highlight.OutlineTransparency = Visuals.MomoOutlineTransparency
+	highlight.FillColor = markerColor(kind)
+	highlight.FillTransparency = Visuals.MomoFillTransparency
+	-- Lives inside the momo model, so it is cleaned up when the server removes the momo.
+	highlight.Parent = model
+end
+
 local function onMomoAdded(model: Instance)
 	if not model:IsA("Model") then
 		return
@@ -224,6 +241,9 @@ local function onMomoAdded(model: Instance)
 		end
 		model.DescendantAdded:Connect(fade)
 		return
+	end
+	if Visuals.MomoOutline then
+		outline(model)
 	end
 	if not Visuals.DropMarkers then
 		return

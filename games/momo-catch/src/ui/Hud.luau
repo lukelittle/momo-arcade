@@ -76,7 +76,9 @@ function Hud.create(parent: Instance): Hud
 		Parent = root,
 	}) :: Frame
 	UIHelpers.list(bar, Enum.FillDirection.Horizontal, 16)
-	UIHelpers.autoScale(bar, 900, 0.5, 1.2)
+	-- Min 0.4 so the whole bar fits a 320px-wide phone. The ScreenGui keeps clear of the
+	-- Roblox top bar and notches (IgnoreGuiInset = false, ScreenInsets = CoreUISafeInsets).
+	UIHelpers.autoScale(bar, 900, 0.4, 1.2)
 
 	-- Score
 	local scorePill = pill("Score", 200, 1, bar)

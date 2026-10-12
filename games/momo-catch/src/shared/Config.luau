@@ -48,8 +48,12 @@ Config.BurntLivesLost = 1
 -- Spawning and catching
 --------------------------------------------------------------------------------
 Config.Spawning = {
-	Height = 42, -- studs above the ground where momos appear
-	RadiusAroundPlayer = 18, -- momos drop within this distance of their player
+	FirstDelay = 0.3, -- seconds after "Go!" before the first momo appears
+	-- Low enough that a momo is on screen (even a phone's) from the moment it appears.
+	Height = 24, -- studs above the ground where momos appear
+	RadiusAroundPlayer = 14, -- momos drop within this distance of their player...
+	ForwardBias = 7, -- ...centred this far in front of them, where the camera looks
+	MomoScale = 1.5, -- size multiplier on the momo model (1 = 2.4 studs wide)
 	MaxActivePerPlayer = 24, -- hard cap on falling momos per player
 	MaxLifetimeSeconds = 12, -- safety net: anything older is removed
 	SpinSpeed = 2.2, -- radians/second around the vertical axis
@@ -64,10 +68,11 @@ Config.Catch = {
 }
 
 Config.Basket = {
-	-- Where the basket sits relative to the HumanoidRootPart (forward is -Z).
-	Offset = CFrame.new(0, 0.25, -2.3),
-	Diameter = 3.6,
-	Height = 1.2,
+	-- Where the basket sits relative to the upper torso (R15 UpperTorso / R6 Torso;
+	-- forward is -Z): held against the chest, just in front of the hands.
+	Offset = CFrame.new(0, -0.15, -1.25),
+	Diameter = 1.25, -- small enough not to block the view (catch radius is separate)
+	Height = 0.45,
 }
 
 --------------------------------------------------------------------------------
@@ -80,12 +85,31 @@ Config.Arena = {
 	DespawnMargin = 12, -- momos this far outside the arena are removed
 }
 
+-- Background mountain range: far away and big, so it sits low on the horizon
+-- instead of filling the sky.
+Config.Mountains = {
+	Count = 12,
+	DistanceMin = 1100, -- studs from the arena centre
+	DistanceMax = 1500,
+	BaseWidthMin = 520,
+	BaseWidthMax = 820,
+	HeightMin = 260, -- peaks sit ~12-17 degrees above the horizon (was ~35)
+	HeightMax = 340,
+}
+
 --------------------------------------------------------------------------------
 -- Client visuals
 --------------------------------------------------------------------------------
 Config.Visuals = {
 	DropMarkers = true, -- soft circle on the ground under each of your falling momos
 	OtherPlayersMomoTransparency = 0.6, -- fade other players' momos so yours stand out
+	MomoOutline = true, -- soft outline on your own momos so they pop against the sky
+	MomoOutlineTransparency = 0.25, -- outline (0 = solid)
+	MomoFillTransparency = 0.85, -- faint tint over the whole momo (1 = none)
+	-- Camera framing when a round starts: behind the character, tilted up at the sky.
+	PlayCameraDistance = 16, -- studs behind the character (sets the angle; zoom stays the default)
+	PlayCameraHeight = 5, -- studs above the character's root
+	PlayCameraLookUp = 9, -- aim point height above the root, as far ahead as the camera is behind
 	ShakeIntensity = 0.45, -- studs of camera shake on a burnt catch
 	ShakeSeconds = 0.35,
 	LobbyCameraRadius = 78, -- slow orbit shown behind the menus

@@ -4,6 +4,7 @@
     "ResetOnSpawn": false,
     "IgnoreGuiInset": false,
     "ZIndexBehavior": "Sibling",
-    "DisplayOrder": 5
+    "DisplayOrder": 5,
+    "ScreenInsets": "CoreUISafeInsets"
   }
 }

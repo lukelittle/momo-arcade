@@ -3,6 +3,10 @@
 	CameraController: a slow, scenic orbit around the arena behind the menus (Lobby
 	and GameOver), and the normal follow camera while playing. Character movement is
 	paused while a menu is open so the thumbstick/jump button don't get in the way.
+
+	When a round starts the follow camera is placed behind the character and tilted up
+	a little, so the sky where momos appear is on screen (the orbit looks down at the
+	arena, and the follow camera would otherwise keep that downward tilt).
 ]]
 
 local Players = game:GetService("Players")
@@ -71,6 +75,26 @@ local function startOrbit()
 	end)
 end
 
+-- Behind the character, slightly above, aiming up toward the sky. The default camera
+-- scripts take their angle from whatever CFrame the camera has, so this sets the starting
+-- angle (they keep their own zoom) and players can still swipe/drag to look around.
+local function framePlayCamera(camera: Camera, character: Model)
+	local root = character:FindFirstChild("HumanoidRootPart")
+	if not root or not root:IsA("BasePart") then
+		return
+	end
+	local look = root.CFrame.LookVector
+	local forward = Vector3.new(look.X, 0, look.Z)
+	forward = if forward.Magnitude > 1e-3 then forward.Unit else Vector3.new(0, 0, -1)
+	local eye = root.Position
+		- forward * Visuals.PlayCameraDistance
+		+ Vector3.yAxis * Visuals.PlayCameraHeight
+	local target = root.Position
+		+ forward * Visuals.PlayCameraDistance
+		+ Vector3.yAxis * Visuals.PlayCameraLookUp
+	camera.CFrame = CFrame.lookAt(eye, target)
+end
+
 local function stopOrbit()
 	if not orbiting then
 		return
@@ -82,8 +106,9 @@ local function stopOrbit()
 		camera.CameraType = Enum.CameraType.Custom
 		local character = localPlayer.Character
 		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-		if humanoid then
+		if character and humanoid then
 			camera.CameraSubject = humanoid
+			framePlayCamera(camera, character)
 		end
 	end
 	setControlsEnabled(true)
