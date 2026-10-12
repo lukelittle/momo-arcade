@@ -86,6 +86,16 @@ local function stopOrbit()
 			camera.CameraSubject = humanoid
 		end
 	end
+	-- Coming back from a Scriptable camera can leave the follow camera zoomed all the
+	-- way into first person. Briefly raising the minimum zoom pushes it back out.
+	local previousMin = localPlayer.CameraMinZoomDistance
+	local playDistance = math.min(Visuals.PlayCameraDistance, localPlayer.CameraMaxZoomDistance)
+	localPlayer.CameraMinZoomDistance = playDistance
+	task.delay(0.2, function()
+		if localPlayer.CameraMinZoomDistance == playDistance then
+			localPlayer.CameraMinZoomDistance = previousMin
+		end
+	end)
 	setControlsEnabled(true)
 end
 

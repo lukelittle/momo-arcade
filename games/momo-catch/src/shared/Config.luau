@@ -91,6 +91,7 @@ Config.Visuals = {
 	LobbyCameraRadius = 78, -- slow orbit shown behind the menus
 	LobbyCameraHeight = 30,
 	LobbyCameraSpeed = 0.06, -- radians per second
+	PlayCameraDistance = 16, -- follow-camera zoom when a round starts (studs behind you)
 }
 
 --------------------------------------------------------------------------------
