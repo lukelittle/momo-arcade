@@ -49,7 +49,7 @@ local function disableStore(reason: string)
 	warn(
 		"[MomoCatch] Saving is off for this session: "
 			.. reason
-			.. "\n  In Studio: Home > Game Settings > Security > Enable Studio Access to API Services"
+			.. "\n  In Studio: File > Experience Settings > Security > Enable Studio Access to API Services"
 			.. " (the place must be published first). The game still works, it just won't remember scores."
 	)
 end

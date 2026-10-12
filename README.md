@@ -75,23 +75,28 @@ While connected, any file you save here updates in Studio straight away. Stop an
 High scores and "momos caught" are saved with DataStores. Studio blocks DataStores until you allow it:
 
 1. **File › Publish to Roblox** (DataStores only work in a published place). Give it a name like "Momo Catch".
-2. **Home › Game Settings › Security** → turn on **Enable Studio Access to API Services** → **Save**.
+2. **File › Experience Settings › Security** → turn on **Enable Studio Access to API Services** → **Save**.
 3. Press Play. Your best score now survives between play sessions.
 
 If this is off, the game still works. You'll just see one yellow warning in Output saying saving is off.
 
 ### 6. Publish as a private experience and invite a friend
 
-1. **File › Publish to Roblox** (if you haven't already).
-2. Go to the [Creator Dashboard](https://create.roblox.com/dashboard/creations), open the experience, and
-   check it is **Private** (new experiences start private).
-3. In Studio: **Home › Game Settings › Permissions**. Under collaborators, add your friend
-   (you need to be Roblox friends) and give them **Play** permission. Save.
-4. Send them the experience link from the Creator Dashboard. They can now join, and nobody else can.
+1. **File › Publish to Roblox**. Name it "Momo Catch", choose the devices (Computer, Phone, Tablet,
+   Console), then **Create**. Studio reopens the place as a live editing (Team Create) session; that's normal.
+   To publish later code changes, sync with Rojo and use **File › Publish to Roblox** again.
+2. Open the experience on [Creator Hub](https://create.roblox.com/dashboard/creations).
+   (Newer Studio versions no longer have a Permissions page; **File › Experience Settings ›
+   Additional Settings** links to these Creator Hub pages.)
+3. **Configure › Questionnaire**: fill in the maturity questionnaire. Roblox needs it before other
+   people can join.
+4. **Audience › Access**: this controls who can play (privacy and playable devices). Keep the experience
+   private and give your friend access there, or make it public. A public experience is hard to stumble on
+   anyway; your friend just uses the link.
+5. Send them the experience link (**Copy URL** on the experience's Creator Hub page).
 
-> Roblox may ask you to fill in the **Maturity & Compliance questionnaire** for the experience before
-> other people can join. It takes a minute in the Creator Dashboard. Menu names do move around
-> between Studio versions; if something isn't where it says above, search the Studio settings for "Permissions".
+> Studio's **Collaborate** button (top right) invites people as *editors*, who can change the game.
+> Use it only if that's what you want.
 
 ### 7. Change the game: Config
 
@@ -122,7 +127,8 @@ It only ever shows **once** per player (that's saved too), so to see it again ei
 Open a new terminal so your PATH picks up `~/.rokit/bin`, then run `rokit install` from the repo folder.
 
 **The Rojo plugin says "version mismatch" or won't connect**
-Run `rojo plugin install` again (with Studio closed), then restart Studio. Make sure `rojo serve` is still
+Run `rojo plugin install` again (with Studio closed), then restart Studio. If the **Plugins** tab is
+empty, the plugin isn't installed yet: run `rojo plugin install` and restart Studio. Make sure `rojo serve` is still
 running and the plugin is using port `34872`.
 
 **`rojo serve` says a path doesn't exist**
