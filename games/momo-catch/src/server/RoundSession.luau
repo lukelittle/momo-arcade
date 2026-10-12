@@ -342,8 +342,8 @@ function RoundSession._updateMomos(self: RoundSession, dt: number): boolean
 		local active = self.momos[index]
 		local momo = active.momo
 		if not momo.body.Parent then
-			-- Destroyed by something else (e.g. fell out of the world).
-			table.remove(self.momos, index)
+			-- Removed by something else (e.g. fell out of the world): tidy up the rest.
+			self:_removeMomoAt(index)
 			continue
 		end
 
