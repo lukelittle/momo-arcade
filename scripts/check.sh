@@ -26,13 +26,17 @@ for project in games/*/default.project.json; do
 	rojo build "$project" -o "$CACHE/$name.rbxl"
 
 	echo "==> luau-lsp analyze ($name)"
-	rojo sourcemap "$project" -o "$CACHE/$name.sourcemap.json"
-	luau-lsp analyze \
-		--platform=roblox \
-		--defs="$DEFS" \
-		--sourcemap="$CACHE/$name.sourcemap.json" \
-		--no-strict-dm-types \
-		shared "$game_dir/src"
+	# Sourcemap paths are relative to the project file, so analyze from the game folder.
+	(
+		cd "$game_dir"
+		rojo sourcemap default.project.json -o "../../$CACHE/$name.sourcemap.json"
+		luau-lsp analyze \
+			--platform=roblox \
+			--defs="../../$DEFS" \
+			--sourcemap="../../$CACHE/$name.sourcemap.json" \
+			--no-strict-dm-types \
+			../../shared src
+	)
 done
 
 echo "All checks passed."
